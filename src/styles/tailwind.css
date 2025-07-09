@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-cover bg-center bg-fixed text-white;
+  background-image: url('../assets/bg.jpg');
+}
+@font-face {
+  font-family: 'norwester';
+  src: url('../assets/fonts/norwester.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
