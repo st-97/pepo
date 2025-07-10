@@ -15,3 +15,25 @@ body {
   font-weight: normal;
   font-style: normal;
 }
+@keyframes hanging-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  70% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.hanging-bounce {
+  animation: hanging-bounce 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+ 
