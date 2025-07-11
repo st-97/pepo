@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
 import gameProgressBg from '../assets/images/gameProgress.jpg'
 import homeIcon from '../assets/images/home.svg'
 import giftIcon from '../assets/images/gift.svg'
@@ -8,6 +9,12 @@ import arrowIcon from '../assets/images/arrow.svg'
 const props = defineProps({
   selectedGame: Object
 })
+
+const router = useRouter()
+
+function goToGamePage() {
+  router.push('/games/americanhistory')
+}
 </script>
 
 <template>
@@ -24,7 +31,7 @@ const props = defineProps({
       </div>
     </div>
     <!-- Arrow icon bottom right -->
-    <img :src="arrowIcon" alt="Arrow" class="h-16 w-16 md:h-24 md:w-24 lg:h-32 lg:w-32 absolute bottom-6 md:bottom-10 right-6 md:right-10 cursor-pointer transition-all duration-200" />
+    <img :src="arrowIcon" alt="Arrow" class="h-16 w-16 md:h-24 md:w-24 lg:h-32 lg:w-32 absolute bottom-6 md:bottom-10 right-6 md:right-10 cursor-pointer transition-all duration-200" @click="goToGamePage" />
   </div>
 </template>
 

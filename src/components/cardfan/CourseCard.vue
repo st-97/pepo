@@ -21,9 +21,8 @@ const cardClass = computed(() => [
   >
     <img :src="src" :alt="name" class="absolute inset-0 w-full h-full object-cover z-0" />
     <div class="absolute inset-0 bg-black bg-opacity-30 z-10"></div>
-    <span class="relative z-20 text-white text-2xl font-extrabold text-center drop-shadow-lg px-2 select-none">
-      {{ name }}
-    </span>
+    <label class="relative z-20 text-white text-3xl font-extrabold text-center drop-shadow-lg px-2 select-none">{{ name }}</label>
+  
   </div>
 </template>
 

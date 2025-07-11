@@ -1,65 +1,50 @@
 <script setup>
 import CourseCard from './cardfan/CourseCard.vue'
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, ref, onMounted, nextTick } from 'vue'
+import { CourseEnum } from '../enums/courseEnum.js'
 
 const props = defineProps({
   selectedGame: Object
 })
 const emit = defineEmits(['back', 'courseSelected'])
 
-import americaHistory from '../assets/images/courses/americaHistory.svg'
-import math from '../assets/images/courses/math.svg'
-import geography from '../assets/images/courses/geography.svg'
-import biology from '../assets/images/courses/biology.svg'
-import coding from '../assets/images/courses/coding.svg'
-import scienve from '../assets/images/courses/scienve.svg'
-import space from '../assets/images/courses/space.svg'
-import chess from '../assets/images/courses/chess.svg'
-import englishReading from '../assets/images/courses/englishReading.svg'
-
-const courses = [
-  { src: americaHistory, glow: '#C8FF45', name: 'America History' },
-  { src: math, glow: '#C8FF45', name: 'Math' },
-  { src: geography, glow: '#C8FF45', name: 'Geography' },
-  { src: biology, glow: '#C8FF45', name: 'Biology' },
-  { src: coding, glow: '#C8FF45', name: 'Coding' },
-  { src: scienve, glow: '#C8FF45', name: 'Science' },
-  { src: space, glow: '#C8FF45', name: 'Space' },
-  { src: chess, glow: '#C8FF45', name: 'Chess' },
-  { src: englishReading, glow: '#C8FF45', name: 'English Reading' },
-]
+// Dynamically get all courses from the enum
+const courses = Object.values(CourseEnum)
 
 function handleCourseClick(course) {
   emit('courseSelected', course)
 }
+
+const popInStates = ref([])
+
+onMounted(async () => {
+  popInStates.value = courses.map(() => false)
+  await nextTick()
+  courses.forEach((_, i) => {
+    setTimeout(() => {
+      popInStates.value[i] = true
+    }, 120 * i)
+  })
+})
 </script>
 
 <template>
-  <div class="flex items-center mb-8 mt-4">
-    <span class="text-4xl md:text-5xl font-norwester font-bold tracking-wider text-white">
-      Choose course to redeem
-    </span>
-    <img
-      v-if="selectedGame"
-      :src="selectedGame.src"
-      :alt="selectedGame.name"
-      class="h-18 w-16 ml-8 rounded-xl shadow-lg transition-all duration-300 cursor-pointer hanging-bounce"
-      :style="{ boxShadow: `0 0 16px 0 ${selectedGame.glow}` }"
-      @click="$emit('back')"
-    />
-  </div>
-  <div class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 justify-items-center mt-8">
-    <div
-      v-for="course in courses"
-      :key="course.name"
-      @click="handleCourseClick(course)"
-      class="cursor-pointer w-full flex justify-center"
-    >
-      <CourseCard
-        :name="course.name"
-        :src="course.src"
-        :glow="course.glow"
-      />
+  <div class="w-full max-w-6xl mt-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 justify-items-center">
+      <div
+        v-for="(course, i) in courses"
+        :key="course.key"
+        @click="handleCourseClick(course)"
+        class="cursor-pointer w-full flex justify-center"
+      >
+        <div :class="['pop-in-card', { 'pop-in': popInStates[i] }]">
+          <CourseCard
+            :name="course.name"
+            :src="course.image"
+            :glow="course.glow"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -67,5 +52,14 @@ function handleCourseClick(course) {
 <style scoped>
 .font-norwester {
   font-family: 'norwester', sans-serif;
+}
+.pop-in-card {
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pop-in-card.pop-in {
+  opacity: 1;
+  transform: scale(1);
 }
 </style>

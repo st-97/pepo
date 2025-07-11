@@ -33,7 +33,7 @@ function handleStartNow() {
         label="Parents Click Here"
         fontSize="text-2xl"
         fontClass="font-norwester tracking-wider"
-        :onClick="handleClick"
+        :onClick="() => {/* TODO: Add parent click logic */}"
         class="absolute bottom-0 right-10 mb-2"
       />
   </div>

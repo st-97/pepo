@@ -1,31 +1,29 @@
 <script setup>
+import { GameEnum } from '../enums/gameEnum.js'
 const emit = defineEmits(['gameSelected'])
 import GameCard from './cardfan/GameCard.vue'
 import pepoIcon from '../assets/images/pepo.svg'
 import coinIcon from '../assets/images/coin.svg'
-import playstation from '../assets/images/games/playstation.svg'
-import fortnite from '../assets/images/games/fortnite.svg'
-import roblox from '../assets/images/games/robolox.svg'
-import minecraft from '../assets/images/games/minecraft.svg'
-import amongus from '../assets/images/games/amongus.svg'
-import xbox from '../assets/images/games/xbox.svg'
-import mario from '../assets/images/games/mario.svg'
-import leaguesLegends from '../assets/images/games/leaguesLegends.svg'
+import { ref, onMounted, nextTick } from 'vue'
 
-const games = [
-  { src: playstation, glow: '#C8FF45', name: 'Playstation' },
-  { src: fortnite, glow: '#C8FF45', name: 'Fortnite' },
-  { src: minecraft, glow: '#C8FF45', name: 'Minecraft' },
-  { src: roblox, glow: '#C8FF45', name: 'Roblox' },
-  { src: amongus, glow: '#C8FF45', name: 'Among us' },
-  { src: xbox, glow: '#C8FF45', name: 'Xbox' },
-  { src: mario, glow: '#C8FF45', name: 'Mario' },
-  { src: leaguesLegends, glow: '#C8FF45', name: 'leaguesLegends' },
-]
+// Dynamically get all games from the enum
+const games = Object.values(GameEnum)
 
 function handleChoose(game) {
   emit('gameSelected', game)
 }
+
+const slideInStates = ref([])
+
+onMounted(async () => {
+  slideInStates.value = games.map(() => false)
+  await nextTick()
+  games.forEach((_, i) => {
+    setTimeout(() => {
+      slideInStates.value[i] = true
+    }, 120 * i)
+  })
+})
 </script>
 
 <template>
@@ -37,19 +35,32 @@ function handleChoose(game) {
     <img :src="coinIcon" alt="Coin Icon" class="h-10 w-10 ml-4 hanging-bounce" />
   </div>
   <div class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-20 justify-items-center mt-8">
-    <GameCard
-      v-for="game in games"
-      :key="game.name"
-      :name="game.name"
-      :src="game.src"
-      :glow="game.glow"
-      @choose="handleChoose(game)"
-    />
+    <div
+      v-for="(game, i) in games"
+      :key="game.key"
+      :class="['slide-in-card', { 'slide-in': slideInStates[i] }]"
+    >
+      <GameCard
+        :name="game.name"
+        :src="game.image"
+        :glow="'#C8FF45'"
+        @choose="handleChoose(game)"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
 .font-norwester {
   font-family: 'norwester', sans-serif;
+}
+.slide-in-card {
+  opacity: 0;
+  transform: translateY(60px) scale(0.95);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide-in-card.slide-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 </style>
